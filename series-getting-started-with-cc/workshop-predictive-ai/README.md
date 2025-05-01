@@ -601,7 +601,7 @@ confluent kafka cluster use <cluster-id>
 </div>
 
 ```bash
-confluent flink connection create my-connection --cloud aws --region us-east-1 --type bedrock --endpoint https://bedrock-runtime.us-east-1.amazonaws.com/model/meta.llama3-8b-instruct-v1:0/invoke --aws-access-key <API Key> --aws-secret-key <API Secret>
+confluent flink connection create my-connection --cloud aws --region us-east-1 --type bedrock --endpoint https://bedrock-runtime.ap-southeast-1.amazonaws.com/model/anthropic.claude-3-5-sonnet-20240620-v1:0/invoke --aws-access-key <API Key> --aws-secret-key <API Secret>
 ```
 3. After creating connection, we need to create the model in Flink before we could invoke on our query.
 ```sql
@@ -612,6 +612,7 @@ WITH (
   'task' = 'text_generation',
   'provider' = 'bedrock',
   'bedrock.connection' = 'my-connection'
+  'bedrock.params.max_tokens' = '500'
 );
 ```
 
