@@ -46,11 +46,11 @@
 
 4. Clone this repo:
    ```
-   git clone git@github.com:confluentinc/commercial-workshops.git
+   git clone git@github.com:ardhnyg/commercial-workshops.git
    ```
    or
    ```
-   git clone https://github.com/confluentinc/commercial-workshops.git
+   git clone https://github.com/ardhnyg/commercial-workshops.git
    ```
 
 5. Install confluent cloud CLI based on your OS (https://docs.confluent.io/confluent-cli/current/install.html)
@@ -553,15 +553,20 @@ SELECT details FROM fraudulent_transactions
     <img src="images/fraud_transactions.png" width=75% height=75%>
 </div>
 
-## <a name="step-12"></a>Connect Flink with Bedrock Model
-The next step is to create a integrated model from AWS Bedrock with Flink on Confluent Cloud.
+## <a name="step-12"></a>Connect Flink with LLM Model
+The next step is to create a integrated model from LLM Model with Flink on Confluent Cloud. 
+We will try to connect using 2 LLM; Claude Sonet from Bedrock AWS and Gemini from Google AI Studio.
+Please note that Flink only provide connection in the **same cloud provider**. Meaning if in previous steps you create Flink in AWS region, then you can only connect to AWS Bedrock.
 
 1. First, you will create the model connection using Confluent CLI. If you've never installed one, you could install it based on your OS (https://docs.confluent.io/confluent-cli/current/install.html) and login to confluent.
 ```bash
 confluent login
 ```
 
-2. Make sure you prepare your AWS API Key and Secret to create connection to the Bedrock. (Would be provided in the workshop)
+2. Make sure you prepare your AWS API Key and Secret to create connection to the Bedrock, and/or Google API Key to create connection to the Gemini.
+Reference :
+Bedrock API Key : https://docs.aws.amazon.com/bedrock/latest/userguide/getting-started-api.html
+Google AI Studio API Key : https://aistudio.google.com/apikey
 
 3. Make sure you are using the right environment and right cluster to create the connection. Verify by performing the following.
 ```bash
@@ -601,9 +606,16 @@ confluent kafka cluster use <cluster-id>
 </div>
 
 ```bash
-confluent flink connection create my-connection --cloud aws --region us-east-1 --type bedrock --endpoint https://bedrock-runtime.ap-southeast-1.amazonaws.com/model/anthropic.claude-3-5-sonnet-20240620-v1:0/invoke --aws-access-key <API Key> --aws-secret-key <API Secret>
+
+Now create the connection : 
+For connecting to AWS Bedrock : 
+confluent flink connection create my-connection-aws --cloud aws --region ap-southeast-1 --type bedrock --environment <Your Environment ID> --endpoint https://bedrock-runtime.ap-southeast-1.amazonaws.com/model/anthropic.claude-3-5-sonnet-20240620-v1:0/invoke --aws-access-key <API Key> --aws-secret-key <API Secret>
+
+For connecting to Google AI Studio Gemini : 
+confluent flink connection create my-connection-gcp --cloud gcp --region asia-southeast1 --type googleai --environment <Your Environment ID> --endpoint https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent --api-key <Google API Key>
 ```
 3. After creating connection, we need to create the model in Flink before we could invoke on our query.
+Create Model for AWS Bedrock : 
 ```sql
 CREATE MODEL NotificationEngine
 INPUT (details STRING)
@@ -611,8 +623,20 @@ OUTPUT (message STRING)
 WITH (
   'task' = 'text_generation',
   'provider' = 'bedrock',
-  'bedrock.connection' = 'my-connection'
+  'bedrock.connection' = 'my-connection-aws'
   'bedrock.params.max_tokens' = '500'
+);
+```
+
+Create Model for Google Gemini : 
+```sql
+CREATE MODEL NotificationEngine
+INPUT (`details` VARCHAR(2147483647))
+OUTPUT (`message` VARCHAR(2147483647))
+WITH (
+  'googleai.connection' = 'my-connection-gcp',
+  'provider' = 'googleai',
+  'task' = 'text_generation'
 );
 ```
 
