@@ -14,7 +14,7 @@
 5. [Create Datagen Connectors for Customers, Credit Cards, and Transactions](#step-5)
 6. [Perform Complex Joins using Flink to Combine the Records into One Topic](#step-6)
 7. [Aggregate and Filter Transactions using Flink for Potential Fraud](#step-7)
-8. [Connect Flink with Bedrock Model (Optional)](#step-8)
+8. [Connect Flink with LLM Model (Optional)](#step-8)
 9. [Clean Up Resources](#step-9)
 10. [Confluent Resources and Further Testing](#step-10)
 ***
@@ -193,12 +193,14 @@ The next step is to produce sample data using the Datagen Source connector. You 
     <img src="images/connectors-3.png" width=75% height=75%>
 </div>
 
-5. Choose **JSON_SR** for select output record value format.
+5. Choose **JSON_SR** for select output record value format.</br>
+
 <div align="center" padding=25px>
     <img src="images/connectors-4.png" width=75% height=75%>
 </div>
 
-6. Click on **Provide Your Own Schema** and paste the following contents
+6. Click on **Provide Your Own Schema** and paste the following contents.
+</br> You can use default quickstart schema, but for this workshop purpose, we have created predefined schema and data structure for Customer topic.
 ```
 {
   "type": "record",
@@ -256,6 +258,7 @@ The next step is to produce sample data using the Datagen Source connector. You 
 
 8. After few seconds Connector would be provisioned and running. Check for messages in the `customers` topic by navigating to the topics section.
 9. Repeat the same steps to create a connector for `credit_cards` topic by using the below schema but use existing API key this time.
+</br> We have created predefined schema and data structure for CreditCards topic.</br>
 <div align="center" padding=25px>
     <img src="images/connectors-6.png" width=75% height=75%>
 </div>
@@ -309,6 +312,7 @@ The next step is to produce sample data using the Datagen Source connector. You 
 </div>
 
 10. Repeat the same steps to create a connector for `transactions` topic by using the below schema but use existing API key this time.
+</br> We have created predefined schema and data structure for Transactions topic.</br>
 <div align="center" padding=25px>
     <img src="images/connectors-6.png" width=75% height=75%>
 </div>
@@ -389,6 +393,8 @@ The next step is to produce sample data using the Datagen Source connector. You 
 12. Click on **Messages**.
 
 * You should now be able to see the messages within the UI. You can view the specific messages by clicking the icon.
+</br>
+Now, you have 3 connectors to send data to your topics; customers, credit cards, and transcations. Next, we will create data processing using Flink to aggregate, filter, join data and create suspected fraudulent transcation logic so that it can be alerted.
 ***
 
 ## <a name="step-6"></a>Perform Complex Joins using Flink to Combine the Records into One Topic
