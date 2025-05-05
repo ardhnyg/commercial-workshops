@@ -738,76 +738,49 @@ Note your API Key and save it in a secure place.
 2. Still in Get API Key window, notedown the Google AI API Endpoint, right before `?key=GEMINI_API_KEY"`. In the screenshot below, the endpoint we should note is `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`. 
 <img width="1075" alt="image" src="https://github.com/user-attachments/assets/b5dd81ac-4594-4a37-96c3-c9551406d565" />
 
-3. Wait a few minutes and refresh your page to confirm that the model's Access status has changed from **Available to request** to **Access granted**.
+Invoking LLM with Flink consisted of 3 steps; create model connection via Confluent CLI, create model in Flink SQL Workspace, and invoke the created model in Flink SQL workspace.
 
-4. You will also need command line access tokens. You could skip this step if you already have user and api key with full access to bedrock. Otherwise, follow the steps below to generate these credentials:
-
-* Navigate to the IAM Console page. Choose **Users** under the **Access management** section.
-
-* Choose **Create user** or select an existing user.
-
-<div align="center">
-    <img src="images/bedrock-3.png" width=100% height=100%>
-</div>
-
-* In the **Permission options**, choose **Attach policies directly**.
-
-* From the **Permission policies**, search and select **AmazonBedrockFullAccess** and choose **Next**. Then review and choose **Create user**.
-
-<div align="center">
-    <img src="images/bedrock-4.png" width=100% height=100%>
-</div>
-
-* Now, choose the user created in the users list and choose **Create access key** under **Access key 1**.
-
-<div align="center">
-    <img src="images/bedrock-5.png" width=100% height=100%>
-</div>
-
-* When asked about Use case, select **Command Line Interface (CLI)** and select the Confirmation at the bottom of the screen, choose **Next**, choose **Create access key**. Ensure to choose **Show** and save your Access key and Secret access key.
-
-<div align="center">
-    <img src="images/bedrock-6.png" width=100% height=100%>
-</div>
-
-* Copy the Access key and Secret access key in a secured place.
-
-5. First, you will create the model connection using Confluent CLI. If you've never installed one, you could install it based on your OS (https://docs.confluent.io/confluent-cli/current/install.html) and login to confluent.
+3. First, you will create the model connection using Confluent CLI. If you've never installed one, you could install it based on your OS (https://docs.confluent.io/confluent-cli/current/install.html) and login to confluent.
 ```bash
 confluent login
 ```
 
-6. Make sure you are using the right environment to create the Flink connection. Verify by performing the following.
+4. Make sure you are using the right environment to create the Flink connection. Verify by performing the following.
 ```bash
 confluent environment list
 ```
 ```bash
 confluent environment use <env-id>
 ```
-
-7. You will use prepared AWS API Key and Secret from previous step to create connection to the Bedrock. Replace `<API Key>` and `<API Secret>` with your prepared API Key and Secret. Please also replace region in --region parameter with region where you create your Flink compute pool.
+5. Then, enter this command to create the connection : 
 ```bash
-confluent flink connection create my-connection --cloud aws --region <your-flink-region> --type bedrock --endpoint https://bedrock-runtime.us-west-2.amazonaws.com/model/us.anthropic.claude-3-sonnet-20240229-v1:0/invoke --aws-access-key <API Key> --aws-secret-key <API Secret>
+confluent flink connection create googleai-cli-connection \
+--cloud GCP \
+--region <your flink region id> \
+--environment <your Confluent environment id> \
+--type googleai \
+--endpoint https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent \
+--api-key <your Google AI API key>
 ```
-> **Note:** The model endpoint should be `https://bedrock-runtime.<REGION>.amazonaws.com/model/<MODEL_ID>/invoke`.
 
-<div align="center">
-    <img src="images/bedrock-7.png" width=100% height=100%>
-</div>
+> **Note:** Make sure the endpoint is the same with what we note at step 2. `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`.
 
-8. After creating connection, go back to the Flink SQL workspace to create the model in Flink before we could invoke on our query.
+<img width="786" alt="Screenshot 2025-05-05 at 19 12 26" src="https://github.com/user-attachments/assets/8ec8b4a7-52e7-42c1-92b0-199815388dbd" />
+
+6. After creating connection, go back to the Flink SQL workspace to create the model in Flink before we could invoke on our query.
 ```sql
 CREATE MODEL FraudDetectionModel
-INPUT (details STRING)
-OUTPUT (message STRING)
+INPUT (`details` VARCHAR(2147483647))
+OUTPUT (`message` VARCHAR(2147483647))
 WITH (
-  'task' = 'text_generation',
-  'provider' = 'bedrock',
-  'bedrock.PARAMS.max_tokens' = '4092',
-  'bedrock.connection' = 'my-connection',
-  'bedrock.system_prompt' = 'You are an expert in fraud detection. Your tasks is to analyse whether a particular credit card is a fraudulent transaction or not based on the information provided. Begin your response either fraud or not fraud, then followed by your reasoning.'
+  'googleai.connection' = 'googleai-cli-connection',
+  'googleai.system_prompt' = 'You are an expert in fraud detection. Your tasks is to analyse whether a particular credit card is a fraudulent transaction or not based on the information provided. Begin your response either fraud or not fraud, then followed by your reasoning.',
+  'provider' = 'googleai',
+  'task' = 'text_generation'
 );
 ```
+
+<img width="1225" alt="image" src="https://github.com/user-attachments/assets/2f3e5a6a-f489-4ded-aec6-b3c4490234d7" />
 
 9. Now let's invoke the model and get the results.
 
@@ -827,7 +800,8 @@ SELECT transaction_id, message FROM potential_fraud, LATERAL TABLE(ML_PREDICT('F
 10. The AI Response can then be used to assist human operator in detecting fraudulent transactions.
 
 <div align="center">
-    <img src="images/bedrock-8.png" width=100% height=100%>
+    <img width="1236" alt="image" src="https://github.com/user-attachments/assets/6975ebc0-b8e6-4f3c-adb5-6210eb900d7f" />
+
 </div>
 
 11. Stop the query and observe the responses generated by the AI model.
