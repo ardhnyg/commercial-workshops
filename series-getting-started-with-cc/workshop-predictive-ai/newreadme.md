@@ -2,7 +2,7 @@
     <img src="images/confluent.png" width=50% height=50%>
 </div>
 
-# <div align="center">Build Predictive Machine Learning Model Using Streaming Data Pipelines</div>
+# <div align="center">Jakarta DSWT 2025 - Build Predictive Machine Learning Model Using Streaming Data Pipelines</div>
 ## <div align="center">Lab Guide</div>
 <br>
 
