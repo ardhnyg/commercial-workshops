@@ -405,10 +405,10 @@ Kafka topics and schemas are always in sync with our Flink cluster. Any topic cr
 3. Choose the compute pool created in the previous steps.
 4. Click on **Open SQL workspace** button on the top right.
 </br>
-Let's play around with Flink query first. These steps will create a new Table (Topic) called "enriched_transactions_regular_join". In which, this topic will be inserted with data from two other topics; customers and credit_cards which are JOIN-ed together.
+Let's play around with Flink query first. The next Step 5 - 8 will create a new Table (Topic) called "enriched_transactions_regular_join". In which, this topic will be inserted with data from two other topics; customers and credit_cards which are JOIN-ed together.
 Then, we will see the combined data in the enriched_transactions_regular_join topic.
 </br>
-
+</br>
 5. Create an `enriched_transactions_regular_join` table by running the following SQL query.
 
 ```sql
@@ -450,8 +450,10 @@ INNER JOIN customers ON transactions.customer_id = customers.customer_id
 ```sql
 SELECT * FROM enriched_transactions_regular_join
 ```
-
-8. The regular join will produce new records whenever the customer updates their email or credit card information, which is not quite the result that we are looking for. So let's go ahead and **Stop** the above **Insert** and **Select** statement.
+Or, you can also see it in the topic UI
+<img width="1398" alt="Screenshot 2025-05-05 at 18 13 19" src="https://github.com/user-attachments/assets/fc4297bd-619a-4b11-a965-0a27089433d2" />
+</br>
+8. The regular join will produce new records whenever the customer updates their email or credit card information, which is not quite the result that we are looking for. We want to create new stream called `transactions` in which it contain combined of data from `customers`, `credit_cards`, as well as timestamp the transaction is made in `transcations`. So let's go ahead and **Stop** the above **Insert** and **Select** statement.
 
 9. The `transactions` stream needs to join with the `customers` and `credit_cards` information as of the time of the `transactions`. To achieve this, we need to use a **temporal join** because the join results depend on the time relationship of the rows.
 
