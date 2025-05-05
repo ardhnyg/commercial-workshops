@@ -17,7 +17,7 @@
 8. [Add data contract to transactions topic](#step-8)
 9. [Perform complex joins using Flink to combine the records into one topic](#step-9)
 10. [Consume feature set topic and predict fraud transactions](#step-10)
-11. [Connect Flink with Bedrock Model](#step-11)
+11. [Connect Flink with LLM Model](#step-11)
 12. [Flink Monitoring](#step-12)
 13. [Clean Up Resources](#step-13)
 14. [Confluent Resources and Further Testing](#step-14)
