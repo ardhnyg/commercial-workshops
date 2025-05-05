@@ -462,6 +462,7 @@ Or, you can also see it in the topic UI
 <img width="69" alt="image" src="https://github.com/user-attachments/assets/7c8b740a-f9b1-40f7-839a-f78aa38f7732" />
 </br>
 </br>
+
 ```sql
 CREATE TABLE customers_rekeyed (
     customer_id INT NOT NULL PRIMARY KEY NOT ENFORCED,
