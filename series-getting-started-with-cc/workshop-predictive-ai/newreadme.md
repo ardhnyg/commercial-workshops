@@ -405,6 +405,10 @@ Kafka topics and schemas are always in sync with our Flink cluster. Any topic cr
 3. Choose the compute pool created in the previous steps.
 4. Click on **Open SQL workspace** button on the top right.
 5. Create an `enriched_transactions_regular_join` table by running the following SQL query.
+</br>
+Let's play around with Flink query first. These steps will create a new Table (Topic) called "enriched_transactions_regular_join". In which, this topic will be inserted with data from two other topics; customers and credit_cards which are JOIN-ed together.
+Then, we will see the combined data in the enriched_transactions_regular_join topic.
+</br>
 ```sql
 CREATE TABLE enriched_transactions_regular_join (
     transaction_id BIGINT NOT NULL PRIMARY KEY NOT ENFORCED,
