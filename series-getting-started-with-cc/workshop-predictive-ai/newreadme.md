@@ -15,7 +15,7 @@
 6. [Perform Complex Joins using Flink to Combine the Records into One Topic](#step-6)
 7. [Aggregate and Filter Transactions using Flink for Potential Fraud](#step-7)
 8. [Connect Flink with AWS Bedrock Model (Optional)](#step-8a)
-9. [Connect Flink with Google AI Model (Optional)(#step-8b)]
+9. [Connect Flink with Google AI Model (Optional)](#step-8b)
 9. [Clean Up Resources](#step-9)
 10. [Confluent Resources and Further Testing](#step-10)
 ***
