@@ -554,9 +554,10 @@ SELECT details FROM fraudulent_transactions
 </div>
 
 ## <a name="step-12"></a>Connect Flink with LLM Model
-The next step is to create a integrated model from LLM Model with Flink on Confluent Cloud. 
-We will try to connect using 2 LLM; Claude Sonet from Bedrock AWS and Gemini from Google AI Studio.
-Please note that Flink only provide connection in the **same cloud provider**. Meaning if in previous steps you create Flink in AWS region, then you can only connect to AWS Bedrock.
+The next step is to create a integrated model from LLM Model with Flink on Confluent Cloud.</br> 
+We will try to connect using 2 LLM; Claude Sonet from Bedrock AWS and Gemini from Google AI Studio.</br>
+Please note that Flink only provide connection in the **same cloud provider**. Meaning if in previous steps you create Flink in AWS region, then you can only connect to AWS Bedrock.</br>
+</br>
 
 1. First, you will create the model connection using Confluent CLI. If you've never installed one, you could install it based on your OS (https://docs.confluent.io/confluent-cli/current/install.html) and login to confluent.
 ```bash
@@ -605,13 +606,17 @@ confluent kafka cluster use <cluster-id>
     <img src="images/bedrock-2.png" width=100% height=100%>
 </div>
 
-```bash
 
-Now create the connection : 
+Now create the connection : </br>
+</br>
 For connecting to AWS Bedrock : 
+```bash
 confluent flink connection create my-connection-aws --cloud aws --region ap-southeast-1 --type bedrock --environment <Your Environment ID> --endpoint https://bedrock-runtime.ap-southeast-1.amazonaws.com/model/anthropic.claude-3-5-sonnet-20240620-v1:0/invoke --aws-access-key <API Key> --aws-secret-key <API Secret>
+```
+</br>
 
 For connecting to Google AI Studio Gemini : 
+```bash
 confluent flink connection create my-connection-gcp --cloud gcp --region asia-southeast1 --type googleai --environment <Your Environment ID> --endpoint https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent --api-key <Google API Key>
 ```
 3. After creating connection, we need to create the model in Flink before we could invoke on our query.
