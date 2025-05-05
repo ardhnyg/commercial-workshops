@@ -730,17 +730,13 @@ SELECT transaction_id, message FROM potential_fraud, LATERAL TABLE(ML_PREDICT('F
 ## <a name="step-8b"></a>Connect Flink with Google AI Model (Optional)
 The next step is to create a integrated model from Google Gemini with Flink on Confluent Cloud.
 
-1. Navigate to Amazon Bedrock Service > Model Access > choose Enable specific models.
+1. Go to https://aistudio.google.com/. Get API Key > Note your API Key, or create new one if you dont have one.
+<img width="1384" alt="Screenshot 2025-05-05 at 18 56 42" src="https://github.com/user-attachments/assets/8b5cc9ab-0f91-4765-9b92-eaf0237f7593" />
 
-2. Select Claude 3 Sonnet from Anthropic. Choose **Next**. Then, choose **Submit**.
+Note your API Key and save it in a secure place.
 
-<div align="center">
-    <img src="images/bedrock-1.png" width=100% height=100%>
-</div>
-
-<div align="center">
-    <img src="images/bedrock-2.png" width=100% height=100%>
-</div>
+2. Still in Get API Key window, notedown the Google AI API Endpoint, right before `?key=GEMINI_API_KEY"`. In the screenshot below, the endpoint we should note is `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`. 
+<img width="1075" alt="image" src="https://github.com/user-attachments/assets/b5dd81ac-4594-4a37-96c3-c9551406d565" />
 
 3. Wait a few minutes and refresh your page to confirm that the model's Access status has changed from **Available to request** to **Access granted**.
 
