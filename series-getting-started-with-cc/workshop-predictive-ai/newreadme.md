@@ -457,7 +457,11 @@ Or, you can also see it in the topic UI
 
 9. The `transactions` stream needs to join with the `customers` and `credit_cards` information as of the time of the `transactions`. To achieve this, we need to use a **temporal join** because the join results depend on the time relationship of the rows.
 
-10. **Temporal Table Join** requires primary key in both `customers` and `credit_cards` tables. So let's go ahead and re-key both tables with the following queries.
+10. **Temporal Table Join** requires primary key in both `customers` and `credit_cards` tables. So let's go ahead and re-key both tables with the following queries. Remember to put each queriy below in a separate query by clicking "plus" sign after each query to create new query </br>
+
+<img width="69" alt="image" src="https://github.com/user-attachments/assets/7c8b740a-f9b1-40f7-839a-f78aa38f7732" />
+</br>
+</br>
 ```sql
 CREATE TABLE customers_rekeyed (
     customer_id INT NOT NULL PRIMARY KEY NOT ENFORCED,
