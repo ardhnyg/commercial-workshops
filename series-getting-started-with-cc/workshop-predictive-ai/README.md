@@ -91,7 +91,7 @@ An environment contains clusters and its deployed components such as Apache Flin
 </div>
 
 4. Click **Begin Configuration**.
-5. For the purpose of this lab, choose ```AWS``` Cloud Provider, region of your choice, and ```single``` availability zone.
+5. In this lab, choose your preferred Cloud Provider, region of your choice, and ```single``` availability zone.
 6. Specify a **Cluster Name**. For the purpose of this lab, any name will work here.
 
 <div align="center" padding=25px>
